@@ -55,7 +55,7 @@
             document.getElementById("host-card").style.display = "block";
         }
 
-        const socket = new WebSocket("ws://localhost:3000");
+        const socket = new WebSocket('wss://multiplyer-game.onrender.com');
 
         socket.onopen = () => {
             socket.send(JSON.stringify({ type: "requestLobbyState", roomID }));

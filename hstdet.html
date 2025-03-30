@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Host</title>
+    <style>
+        body { background-color: black; color: white; text-align: center; }
+        .form { background-color: black; padding: 20px; border: 2px solid darkslategrey; display: inline-block; }
+    </style>
+</head>
+<body>
+    <h1>Enter Your Details</h1>
+    <div class="form">
+        <label>Username:</label> 
+        <input type="text" id="username"><br><br>
+        <label>Choose Icon:</label> 
+        <input type="file" id="icon" accept="image/*"><br><br>
+        <button onclick="createLobby()">Submit</button>
+    </div>
+
+    <script>
+        function createLobby() {
+            const username = document.getElementById("username").value;
+            const iconFile = document.getElementById("icon").files[0];
+
+            if (username && iconFile) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("icon", reader.result);
+                    localStorage.setItem("host", true);
+
+                    const socket = new WebSocket("ws://localhost:3000");
+                    socket.onopen = () => {
+                        socket.send(JSON.stringify({ type: "createLobby", username, icon: reader.result }));
+                    };
+                    socket.onmessage = (event) => {
+                        const message = JSON.parse(event.data);
+                        if (message.type === "lobbyCreated") {
+                            localStorage.setItem("roomID", message.roomID);
+                            window.location.href = `lobby.html?roomID=${message.roomID}`;
+                        }
+                    };
+                };
+                reader.readAsDataURL(iconFile);
+            }
+        }
+    </script>
+</body>
+</html>

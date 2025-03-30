@@ -29,7 +29,7 @@
                     localStorage.setItem("icon", reader.result);
                     localStorage.setItem("host", true);
 
-                    const socket = new WebSocket("ws://localhost:3000");
+                    const socket = new WebSocket('wss://multiplyer-game.onrender.com');
                     socket.onopen = () => {
                         socket.send(JSON.stringify({ type: "createLobby", username, icon: reader.result }));
                     };

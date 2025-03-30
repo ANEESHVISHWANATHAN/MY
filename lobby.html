@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lobby</title>
+    <style>
+        body { background-color: black; color: white; text-align: center; font-family: Arial, sans-serif; }
+        h1 { color: gold; }
+        .container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; justify-content: center; margin-top: 50px; }
+        .card {
+            display: none;
+            width: 150px;
+            height: 200px;
+            background-color: darkslategrey;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            color: white;
+        }
+        .card img { width: 100px; height: 100px; border-radius: 50%; background-color: white; }
+        .host-label { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Lobby</h1>
+    <p id="room-info">Room ID: <span id="room-id"></span></p>
+    <div class="container">
+        <!-- Host card -->
+        <div id="host-card" class="card">
+            <img id="host-img" src="exit.png" alt="Host Icon">
+            <p id="host-name">Host</p>
+            <p class="host-label">HOST</p>
+        </div>
+
+        <!-- Player cards (7 slots) -->
+        <div id="player1" class="card"><img src="exit.png"><p>Player</p></div>
+        <div id="player2" class="card"><img src="exit.png"><p>Player</p></div>
+        <div id="player3" class="card"><img src="exit.png"><p>Player</p></div>
+        <div id="player4" class="card"><img src="exit.png"><p>Player</p></div>
+        <div id="player5" class="card"><img src="exit.png"><p>Player</p></div>
+        <div id="player6" class="card"><img src="exit.png"><p>Player</p></div>
+        <div id="player7" class="card"><img src="exit.png"><p>Player</p></div>
+    </div>
+
+    <script>
+        const roomID = localStorage.getItem("roomID");
+        const isHost = localStorage.getItem("host") === "true";
+        const username = localStorage.getItem("username");
+        const icon = localStorage.getItem("icon");
+
+        document.getElementById("room-id").textContent = roomID;
+
+        if (isHost) {
+            document.getElementById("host-img").src = icon;
+            document.getElementById("host-name").textContent = username;
+            document.getElementById("host-card").style.display = "block";
+        }
+
+        const socket = new WebSocket("ws://localhost:3000");
+
+        socket.onopen = () => {
+            socket.send(JSON.stringify({ type: "requestLobbyState", roomID }));
+        };
+
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "lobbyState") {
+                updateLobbyUI(message);
+            }
+        };
+
+        function updateLobbyUI(lobbyData) {
+            if (lobbyData.host) {
+                document.getElementById("host-img").src = lobbyData.hostIcon;
+                document.getElementById("host-name").textContent = lobbyData.host;
+                document.getElementById("host-card").style.display = "block";
+            }
+
+            for (let i = 0; i < lobbyData.players.length; i++) {
+                const playerCard = document.getElementById(`player${i + 1}`);
+                if (playerCard) {
+                    playerCard.querySelector("img").src = lobbyData.players[i].icon;
+                    playerCard.querySelector("p").textContent = lobbyData.players[i].username;
+                    playerCard.style.display = "block";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

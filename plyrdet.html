@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Join Lobby</title>
+</head>
+<body>
+    <h1>Enter Your Details</h1>
+    <label>Username:</label> 
+    <input type="text" id="username"><br>
+    <label>Choose Icon:</label> 
+    <input type="file" id="icon" accept="image/*"><br>
+    <label>Enter Room Code:</label> 
+    <input type="text" id="roomID" maxlength="5"><br>
+    <button onclick="joinLobby()">Submit</button>
+
+    <script>
+        function joinLobby() {
+            const username = document.getElementById("username").value;
+            const iconFile = document.getElementById("icon").files[0];
+            const roomID = document.getElementById("roomID").value;
+
+            if (username && iconFile && roomID) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("icon", reader.result);
+                    localStorage.setItem("host", false);
+
+                    const socket = new WebSocket("ws://localhost:3000");
+                    socket.onopen = () => {
+                        socket.send(JSON.stringify({ type: "joinLobby", roomID, username, icon: reader.result }));
+                    };
+                    socket.onmessage = (event) => {
+                        const message = JSON.parse(event.data);
+                        if (message.type === "lobbyJoined") {
+                            localStorage.setItem("roomID", roomID);
+                            window.location.href = `lobby.html?roomID=${roomID}`;
+                        } else {
+                            alert("Error joining room!");
+                        }
+                    };
+                };
+                reader.readAsDataURL(iconFile);
+            }
+        }
+    </script>
+</body>
+</html>

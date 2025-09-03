@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Spooky Fate</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Creepster', cursive, sans-serif;
+      background: #0d0d0d;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: crimson;
+      text-shadow: 0 0 10px red, 0 0 20px black;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+    .year {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #ff4444;
+      text-shadow: 0 0 15px #ff0000;
+    }
+    img {
+      max-width: 200px;
+      width: 80%;
+      margin-top: 20px;
+      filter: drop-shadow(0 0 10px red);
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .year { font-size: 2.2rem; }
+      p { font-size: 1.2rem; }
+    }
+  </style>
+  <!-- spooky font -->
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1>Your Spooky Fate Awaits...</h1>
+  <p>Death likely in</p>
+  <div class="year" id="year">----</div>
+  <img src="clock.png" alt="Spooky Clock">
+  
+  <script>
+    // Example: server can send the year via query params
+    const params = new URLSearchParams(window.location.search);
+    const deathYear = params.get("year") || "????";
+    document.getElementById("year").textContent = deathYear;
+  </script>
+</body>
+</html>

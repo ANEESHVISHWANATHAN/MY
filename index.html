@@ -1,27 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Bingo Entry</title>
-    <style>
-        body { background-color: black; text-align: center; color: gold; }
-        h1 { font-size: 60px; }
-        .button {
-            border-radius: 25px;
-            width: 300px;
-            height: 80px;
-            border: 2px solid cadetblue;
-            font-size: 30px;
-            color: white;
-            background-color: black;
-            margin: 20px;
-            cursor: pointer;
-        }
-        .button:hover { border-color: yellow; color: red; }
-    </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spooky Death Predictor</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #0d0d0d;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      width: 100%;
+      height: 200px;
+      background: url("spooky.gif") center/cover no-repeat;
+    }
+    form {
+      width: 90%;
+      max-width: 550px;
+      background: rgba(20,20,20,0.95);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(255,0,0,0.3);
+      margin-top: -50px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: crimson;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #ccc;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 8px;
+      background: #1c1c1c;
+      color: #fff;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: crimson;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: darkred;
+    }
+  </style>
 </head>
 <body>
-    <h1>BINGO</h1>
-    <button class="button" onclick="location.href='hstdet.html'">CREATE</button>
-    <button class="button" onclick="location.href='plyrdet.html'">JOIN</button>
+  <header></header>
+
+  <form action="/predict" method="POST">
+    <h2>Enter Your Details</h2>
+
+    <!-- Personal Info -->
+    <label>Full Name</label>
+    <input type="text" name="name" required>
+
+    <label>Date of Birth</label>
+    <input type="date" name="dob" required>
+
+    <label>Time of Birth</label>
+    <input type="time" name="tob">
+
+    <label>Place of Birth</label>
+    <input type="text" name="pob" required>
+
+    <label>Gender</label>
+    <select name="gender">
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+
+    <!-- Lifestyle -->
+    <label>Do you smoke?</label>
+    <select name="smoke">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>Do you consume alcohol?</label>
+    <select name="alcohol">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>Do you use drugs?</label>
+    <select name="drugs">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>Daily Sleep Hours</label>
+    <input type="number" name="sleep" min="0" max="24">
+
+    <label>Daily Screen Time (hrs)</label>
+    <input type="number" name="screen" min="0" max="24">
+
+    <label>Exercise Frequency</label>
+    <select name="exercise">
+      <option>Never</option>
+      <option>Sometimes</option>
+      <option>Regularly</option>
+    </select>
+
+    <label>Diet Type</label>
+    <select name="diet">
+      <option>Vegetarian</option>
+      <option>Non-Vegetarian</option>
+      <option>Vegan</option>
+      <option>Junk-heavy</option>
+      <option>Balanced</option>
+    </select>
+
+    <!-- Work & Stress -->
+    <label>Do you have a job?</label>
+    <select name="job">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>How many jobs?</label>
+    <input type="number" name="jobs" min="0" max="10">
+
+    <label>Average work hours per week</label>
+    <input type="number" name="workHours" min="0" max="120">
+
+    <label>Stress level (1–10)</label>
+    <input type="number" name="stress" min="1" max="10">
+
+    <!-- Relationships -->
+    <label>Are you single?</label>
+    <select name="single">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>Relationship happiness (1–10)</label>
+    <input type="number" name="happiness" min="1" max="10">
+
+    <!-- BMI -->
+    <label>Height (cm)</label>
+    <input type="number" name="height" min="50" max="250">
+
+    <label>Weight (kg)</label>
+    <input type="number" name="weight" min="20" max="300">
+
+    <button type="submit">Predict My Fate</button>
+  </form>
 </body>
 </html>

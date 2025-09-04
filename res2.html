@@ -15,6 +15,7 @@
       align-items: center;
       min-height: 100vh;
       text-align: center;
+      padding: 20px;
     }
     h1 {
       font-size: 2.5rem;
@@ -24,52 +25,82 @@
     }
     p {
       font-size: 1.5rem;
-      margin-bottom: 30px;
+      margin-bottom: 15px;
     }
     .year {
       font-size: 3rem;
       font-weight: bold;
       color: #ff4444;
       text-shadow: 0 0 15px #ff0000;
+      margin-bottom: 25px;
     }
-    .reason {
-      font-size: 1.3rem;
-      margin-top: 15px;
-      color: #ff8888;
-      text-shadow: 0 0 8px #990000;
-    }
-    img {
+    img.clock {
       max-width: 200px;
       width: 80%;
-      margin-top: 20px;
+      margin: 20px 0;
       filter: drop-shadow(0 0 10px red);
+    }
+    .share-btn {
+      margin-top: 25px;
+      cursor: pointer;
+      max-width: 180px;
+      width: 50%;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .share-btn:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 10px crimson);
     }
     @media (max-width: 600px) {
       h1 { font-size: 2rem; }
       .year { font-size: 2.2rem; }
       p { font-size: 1.2rem; }
-      .reason { font-size: 1rem; }
+      .share-btn { max-width: 140px; }
     }
   </style>
   <!-- spooky font -->
   <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Your Spooky Fate Awaits...</h1>
-  <p>Death likely in</p>
-  <div class="year" id="year">----</div>
-  <div class="reason" id="reason"></div>
-  <img src="clock.png" alt="Spooky Clock">
+  <div id="resultBox">
+    <h1>Your Spooky Fate Awaits...</h1>
+    <p>Death likely in</p>
+    <div class="year" id="year">----</div>
+    <img src="clock.png" alt="Spooky Clock" class="clock">
+  </div>
 
+  <img src="share.png" alt="Share" class="share-btn" id="shareBtn">
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script>
-    // Example: server can send the year + reason via query params
+    // Get death year from query params
     const params = new URLSearchParams(window.location.search);
     const deathYear = params.get("year") || "????";
-    const reason = params.get("reason") || "";
     document.getElementById("year").textContent = deathYear;
-    if (reason) {
-      document.getElementById("reason").textContent = "Cause: " + reason;
-    }
+
+    // Share functionality
+    document.getElementById("shareBtn").addEventListener("click", () => {
+      const target = document.getElementById("resultBox");
+      html2canvas(target).then(canvas => {
+        canvas.toBlob(blob => {
+          const file = new File([blob], "my_fate.png", { type: "image/png" });
+          if (navigator.share && navigator.canShare({ files: [file] })) {
+            navigator.share({
+              title: "My Death Prediction",
+              text: "This site predicted my fate 😱 Try yours!",
+              files: [file],
+              url: window.location.origin
+            });
+          } else {
+            // fallback: download image
+            const link = document.createElement("a");
+            link.download = "my_fate.png";
+            link.href = canvas.toDataURL();
+            link.click();
+          }
+        });
+      });
+    });
   </script>
 </body>
 </html>

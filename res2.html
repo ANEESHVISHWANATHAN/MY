@@ -4,18 +4,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Spooky Fate</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      height: 100%;
+      background: #0d0d0d; /* dark background */
       font-family: 'Creepster', cursive, sans-serif;
-      background: #0d0d0d;
       color: #eee;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
       text-align: center;
-      padding: 20px;
     }
     h1 {
       font-size: 2.5rem;
@@ -61,7 +60,7 @@
   <!-- spooky font -->
   <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
 </head>
-<body>
+<body id="captureArea">
   <div id="resultBox">
     <h1>Your Spooky Fate Awaits...</h1>
     <p>Death likely in</p>
@@ -80,8 +79,8 @@
 
     // Share functionality
     document.getElementById("shareBtn").addEventListener("click", () => {
-      const target = document.getElementById("resultBox");
-      html2canvas(target).then(canvas => {
+      const target = document.getElementById("captureArea"); // capture full dark page
+      html2canvas(target, { backgroundColor: "#0d0d0d" }).then(canvas => {
         canvas.toBlob(blob => {
           const file = new File([blob], "my_fate.png", { type: "image/png" });
           if (navigator.share && navigator.canShare({ files: [file] })) {
